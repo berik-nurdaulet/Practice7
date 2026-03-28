@@ -3,8 +3,9 @@ import csv
 from connect import connect
 
 conn = connect()
-
 cur = conn.cursor()
+
+
 
 # 1. Create table
 cur.execute("""
@@ -15,6 +16,9 @@ cur.execute("""
     );
 """)
 
+
+
+
 # 2. Insert from CSV
 with open('contacts.csv', 'r',encoding='utf-8') as file:
     reader = csv.DictReader(file)
@@ -23,8 +27,9 @@ with open('contacts.csv', 'r',encoding='utf-8') as file:
             "INSERT INTO contacts (first_name, phone) VALUES (%s, %s) ON CONFLICT (phone) DO NOTHING",
             (row['first_name'], row['phone'])
         )
-
 conn.commit()
+
+
 
 # 3. Insert from console
 name = input("Enter name: ")
@@ -36,18 +41,20 @@ cur.execute(
 )
 conn.commit()
 
+
+
+
 # 4. Update
 ask = input("What do you want to change (Name/Number): ")
 
 if ask == "Name":
-    old_phone = input("Enter phone: ")
+    old_phone = input("Enter old phone: ")
     new_name = input("Enter new name: ")
 
     cur.execute(
         "UPDATE contacts SET first_name = %s WHERE phone = %s",
         (new_name, old_phone)
     )
-
 elif ask == "Number":
     name = input("Enter name: ")
     new_phone = input("Enter new phone: ")
@@ -58,6 +65,9 @@ elif ask == "Number":
     )
 
 conn.commit()
+
+
+
 
 # 5. Query
 filter_choice = input("Filter by (Name/Prefix): ")
@@ -77,6 +87,9 @@ elif filter_choice == "Prefix":
         (prefix + '%',)
     )
     print(cur.fetchall())
+
+
+
 
 # 6. Delete
 delete = input("Delete by (Name/Number): ")
